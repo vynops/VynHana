@@ -707,15 +707,21 @@ pm2 restart vynhana --update-env
 
 ---
 
-## Related Projects
+## Part of the VynOps Suite
 
-| Project | Description |
-|---|---|
-| [**VynDB**](https://db.vynops.online) | Multi-engine database operations platform (PostgreSQL, MySQL, MongoDB, Redis, SQL Server) |
-| [**VynOps Suite**](https://vynops.com) | Full suite of operations dashboards |
+| Product | Purpose | Repo |
+|---|---|---|
+| **VynOps** | Kubernetes operations platform | [vynops/VynOps](https://github.com/vynops/VynOps) |
+| **VynAI** | Ollama fleet manager and AI gateway | [vynops/VynAI](https://github.com/vynops/VynAI) |
+| **VynCost** | Cloud cost visibility | [vynops/VynCost](https://github.com/vynops/VynCost) |
+| **VynDB** | Database operations | [vynops/VynDB](https://github.com/vynops/VynDB) |
+| **VynDC** | Data center management | [vynops/VynDC](https://github.com/vynops/VynDC) |
+| **VynCICD** | CI/CD pipeline management | [vynops/VynCICD](https://github.com/vynops/VynCICD) |
 
 ---
 
 ## License
 
-MIT © [VynOps](https://vynops.com)
+MIT — see [LICENSE](LICENSE)
+
+---
