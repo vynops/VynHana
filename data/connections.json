@@ -1,12 +1,12 @@
 [
   {
-    "id": "hana-8baae29d",
+    "id": "",
     "name": "HANA Cloud BTPK",
-    "host": "84bdda8b-a3c6-4f34-8e85-9dbe2b833c80.hna0.prod-us10.hanacloud.ondemand.com",
+    "host": "",
     "port": 443,
     "database": "hanadb",
     "username": "DBADMIN",
-    "passwordEnc": "DCM0Mjs0O3loamht",
+    "passwordEnc": "",
     "ssl": true,
     "sslValidateCert": true,
     "environment": "production",
