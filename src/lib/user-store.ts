@@ -44,7 +44,7 @@ export function ensureAdminUser() {
   const users = read()
   if (!users.find(u => u.role === 'admin')) {
     const adminEmail = process.env.VYNHANA_ADMIN_EMAIL?.trim() || 'admin@vynhana.local'
-    const adminPassword = process.env.VYNHANA_ADMIN_PASSWORD?.trim() || 'admin123'
+    const adminPassword = process.env.VYNHANA_ADMIN_PASSWORD?.trim() || 'changeme'
     const admin: AppUser = {
       id: `user-${crypto.randomUUID().slice(0, 8)}`,
       name: 'Admin',
