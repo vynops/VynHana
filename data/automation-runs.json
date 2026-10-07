@@ -1,5 +1,14 @@
 [
   {
+    "id": "run-49687b90",
+    "ruleId": "rule-demo-1",
+    "ruleName": "Nightly delta merge review",
+    "startedAt": "2026-10-01T05:16:03.570Z",
+    "completedAt": "2026-10-01T05:16:03.571Z",
+    "status": "failure",
+    "error": "Connection not found for SQL action"
+  },
+  {
     "id": "run-bd1924bb",
     "ruleId": "rule-demo-1",
     "ruleName": "Nightly delta merge review",

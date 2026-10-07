@@ -2,6 +2,8 @@ import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
 import { isDemoWorkspace, loadConnections } from './connection-store'
+import { appendHistory, writeAtomic } from './operations-history'
+import { queueIncidentNotification } from './notifications'
 
 const FILE = path.join(process.cwd(), 'data', 'incidents.json')
 
@@ -22,13 +24,17 @@ export interface Incident {
   createdAt: string
   updatedAt: string
   resolvedAt?: string
+  alertKey?: string
 }
 
 function read(): Incident[] {
-  try { return JSON.parse(fs.readFileSync(FILE, 'utf8')) } catch { return [] }
+  if (!fs.existsSync(FILE)) return []
+  const list = JSON.parse(fs.readFileSync(FILE, 'utf8'))
+  if (!Array.isArray(list)) throw new Error('Invalid incident store')
+  return list
 }
 function write(list: Incident[]) {
-  fs.writeFileSync(FILE, JSON.stringify(list, null, 2), 'utf8')
+  writeAtomic(FILE, list)
 }
 
 function demoIncidents(): Incident[] {
@@ -98,24 +104,33 @@ export function loadIncidents(): Incident[] {
   return list
 }
 
-export function saveIncident(inc: Incident) {
+export function saveIncident(inc: Incident, actor = 'system') {
   const list = read()
   const idx = list.findIndex(i => i.id === inc.id)
+  const action = idx >= 0 ? 'incident.updated' : 'incident.created'
+  const request = appendHistory({ actor, action: `${action}.requested`, resourceId: inc.id, details: { before: idx >= 0 ? list[idx] : null, after: inc } })
   if (idx >= 0) list[idx] = inc
   else list.push(inc)
   write(list)
+  appendHistory({ actor, action, resourceId: inc.id, details: { requestId: request.id } })
+  queueIncidentNotification(inc)
 }
 
-export function deleteIncident(id: string) {
-  write(read().filter(i => i.id !== id))
+export function deleteIncident(id: string, actor = 'system') {
+  const list = read()
+  const previous = list.find(inc => inc.id === id)
+  if (!previous) return
+  const request = appendHistory({ actor, action: 'incident.deleted.requested', resourceId: id, details: { before: previous } })
+  write(list.filter(inc => inc.id !== id))
+  appendHistory({ actor, action: 'incident.deleted', resourceId: id, details: { requestId: request.id } })
 }
 
-export function createIncident(partial: Omit<Incident, 'id' | 'createdAt' | 'updatedAt' | 'timeline'>): Incident {
+export function createIncident(partial: Omit<Incident, 'id' | 'createdAt' | 'updatedAt' | 'timeline'>, actor = 'system'): Incident {
   const now = new Date().toISOString()
   return {
     ...partial,
-    id: `inc-${crypto.randomUUID().slice(0, 8)}`,
-    timeline: [{ at: now, by: 'system', note: 'Incident created' }],
+    id: `inc-${crypto.randomUUID()}`,
+    timeline: [{ at: now, by: actor, note: 'Incident created' }],
     createdAt: now,
     updatedAt: now,
   }

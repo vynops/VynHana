@@ -37,7 +37,11 @@ export async function verifyToken(token: string): Promise<SessionUser | null> {
 export async function getSession(req: NextRequest): Promise<SessionUser | null> {
   const cookie = req.cookies.get('vh_token')?.value
   if (!cookie) return null
-  return verifyToken(cookie)
+  const session = await verifyToken(cookie)
+  if (!session) return null
+  const user = (await import('./user-store')).findUserById(session.id)
+  if (!user || user.active === false) return null
+  return session
 }
 
 export async function requireRole(

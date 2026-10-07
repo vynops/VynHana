@@ -1,1 +1,25 @@
-[]
+[
+  {
+    "title": "HANA monitoring query failed",
+    "description": "Could not retrieve HANA alerts. Check connectivity, credentials and monitoring privileges.",
+    "severity": "high",
+    "status": "open",
+    "connectionId": "hana-8baae29d",
+    "connectionName": "HANA Cloud BTPK",
+    "tags": [
+      "monitor-health",
+      "automatic"
+    ],
+    "alertKey": "monitor-health:hana-8baae29d",
+    "id": "inc-29efdf58-abd2-4386-8bd9-b7a7887cfef8",
+    "timeline": [
+      {
+        "at": "2026-10-07T03:00:41.365Z",
+        "by": "monitor",
+        "note": "Incident created"
+      }
+    ],
+    "createdAt": "2026-10-07T03:00:41.365Z",
+    "updatedAt": "2026-10-07T03:00:41.365Z"
+  }
+]

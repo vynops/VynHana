@@ -42,7 +42,14 @@ export interface OncallEscalation {
 }
 
 function read(): { schedules: OncallSchedule[]; escalations: OncallEscalation[] } {
-  try { return JSON.parse(fs.readFileSync(FILE, 'utf8')) } catch { return { schedules: [], escalations: [] } }
+  if (!fs.existsSync(FILE)) return { schedules: [], escalations: [] }
+  const parsed = JSON.parse(fs.readFileSync(FILE, 'utf8'))
+  const data = Array.isArray(parsed) ? { schedules: parsed } : parsed ?? {}
+  if (typeof data !== 'object') throw new Error('Invalid on-call store')
+  const schedules = data.schedules ?? []
+  const escalations = data.escalations ?? []
+  if (!Array.isArray(schedules) || !Array.isArray(escalations)) throw new Error('Invalid on-call collections')
+  return { ...data, schedules, escalations }
 }
 function write(data: { schedules: OncallSchedule[]; escalations: OncallEscalation[] }) {
   fs.writeFileSync(FILE, JSON.stringify(data, null, 2), 'utf8')

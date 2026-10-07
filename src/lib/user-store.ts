@@ -9,6 +9,7 @@ export interface AppUser {
   email: string
   passwordHash: string
   role: 'admin' | 'editor' | 'viewer'
+  active?: boolean
   createdAt: string
 }
 
@@ -25,6 +26,10 @@ export function loadUsers(): AppUser[] { return read() }
 
 export function findUserByEmail(email: string): AppUser | undefined {
   return read().find(u => u.email.toLowerCase() === email.toLowerCase())
+}
+
+export function findUserById(id: string): AppUser | undefined {
+  return read().find(u => u.id === id)
 }
 
 export function saveUser(user: AppUser) {
@@ -51,6 +56,7 @@ export function ensureAdminUser() {
       email: adminEmail,
       passwordHash: hashPassword(adminPassword),
       role: 'admin',
+      active: true,
       createdAt: new Date().toISOString(),
     }
     users.push(admin)
